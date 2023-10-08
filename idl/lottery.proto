@@ -1,0 +1,35 @@
+syntax="proto3";
+option go_package = "lottery/;lottery";
+
+//window: protoc -I idl/task/pb idl/task/*.proto --go_out=plugins=grpc:.
+//mac: protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative ./idl/task/task.proto
+//mac: protoc-go-inject-tag -input=./idl/pb/task/task.pb.go
+
+
+message DrawRequest{
+    int32 id = 1;
+}
+
+message DrawResponse{
+    string msg = 1;
+    AwardInfo awardInfo = 2;
+}
+message AwardInfo {
+    int64 created = 1;
+    string award = 2;
+    int32 orderId = 3;
+}
+message ListAwardInfoResponse{
+    repeated AwardInfo list = 1;
+}
+message ToMysqlResponse{
+
+}
+
+message empty{}
+service LotteryService{
+    rpc InitAward(empty)returns(empty);
+    rpc Draw(DrawRequest) returns(DrawResponse);
+    rpc ListAwardInfo(DrawRequest) returns(ListAwardInfoResponse);
+    rpc ToMysql(empty) returns(ToMysqlResponse);
+}
